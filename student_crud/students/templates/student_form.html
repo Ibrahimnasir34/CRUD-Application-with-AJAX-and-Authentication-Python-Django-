@@ -1,0 +1,31 @@
+<!-- students/templates/student_form.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ form.instance.pk|yesno:"Update Student,Add New Student" }}</h2>
+<form id="student-form" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{{ form.instance.pk|yesno:"Update,Add" }}</button>
+</form>
+<script>
+    $(document).ready(function(){
+        $('#student-form').on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        window.location.href = "{% url 'student_list' %}";
+                    } else {
+                        console.log(response.errors);
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
